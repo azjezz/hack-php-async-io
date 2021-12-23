@@ -1,0 +1,18 @@
+{
+    "name": "azjezz/hack-php-async-io",
+    "authors": [
+        {
+            "name": "azjezz",
+            "email": "azjezz@protonmail.com"
+        }
+    ],
+    "require": {
+      "azjezz/psl": "2.0.x-dev"
+    },
+    "scripts": {
+      "iphp": "@php src/main.php",
+      "iphp-cold-jit": "@php -dopcache.jit=1235 -dopcache.enable_cli=yes -dopcache.enable=yes src/main.php",
+      "ihhvm": "hhvm src/main.hack",
+      "raw": ["@iphp", "@ihhvm"]
+    }
+}
