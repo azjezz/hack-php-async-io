@@ -1,4 +1,5 @@
 use HH\Lib\Async;
+use HH\Lib\Network;
 use HH\Lib\TCP;
 use HH\Lib\IO;
 use HH\Lib\C;
@@ -10,7 +11,7 @@ async function main(): Awaitable<noreturn> {
     $start = microtime(true);
 
     $client = new Async\Semaphore(3, async (string $url): Awaitable<string> ==> {
-        $client = await TCP\connect_async($url, 80);
+        $client = await TCP\connect_async($url, 80, shape('ip_version' => Network\IPProtocolBehavior::FORCE_IPV4));
         await $client->writeAllAsync("GET / HTTP/1.1\r\nHost: $url\r\nConnection: close\r\n\r\n");
         $response = await $client->readAllAsync();
         $client->close();
