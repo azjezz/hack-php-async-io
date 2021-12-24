@@ -12,9 +12,9 @@ require __DIR__ . '/../vendor/autoload.php';
 Async\main(static function(): int {
     $start = microtime(true);
 
-    $client = new Async\Semaphore(3, static function(string $url): string {
-        $client = TCP\connect($url, 80);
-        $client->writeAll("GET / HTTP/1.1\r\nHost: $url\r\nConnection: close\r\n\r\n");
+    $client = new Async\Semaphore(100, static function(int $_i): string {
+        $client = TCP\connect('localhost', 3030);
+        $client->writeAll("GET / HTTP/1.1\r\nHost: localhost\r\nConnection: close\r\n\r\n");
         $response = $client->readAll();
         $client->close();
 
@@ -22,8 +22,8 @@ Async\main(static function(): int {
     });
 
     $awaitables = [];
-    for ($i = 0; $i <= 50; $i++) {
-        $awaitables[] = Async\run(fn() => $client->waitFor('example.com'));
+    for ($i = 0; $i <= 1000; $i++) {
+        $awaitables[] = Async\run(static fn() => $client->waitFor($i));
     }
 
     $responses = Async\all($awaitables);

@@ -1,16 +1,24 @@
 ## [`Hsl`](https://github.com/hhvm/hsl) vs [`Psl`](https://github.com/azjezz/psl) Async IO benchmarks
 
-```
-> hyperfine --warmup 2 --runs 20 "php src/main.php" "hhvm src/main.hack"
-Benchmark #1: php src/main.php
-  Time (mean ± σ):      7.388 s ±  2.101 s    [User: 138.2 ms, System: 44.8 ms]
-  Range (min … max):    5.781 s … 11.831 s    20 runs
+The benchmarks are ran against a local http server ( src/server.php ), to run the server, use:
 
-Benchmark #2: hhvm src/main.hack
-  Time (mean ± σ):      8.621 s ±  2.511 s    [User: 1.362 s, System: 0.100 s]
-  Range (min … max):    6.786 s … 12.705 s    20 runs
+```shell
+php -dopcache.jit=1235 -dopcache.enable_cli=yes -dopcache.enable=yes src/server.php
+```
+
+benchmark results:
+
+```
+> hyperfine --runs 100 "php -dopcache.jit=1235 -dopcache.enable_cli=yes -dopcache.enable=yes src/main.php" "hhvm -d hhvm.jit=1 src/main.hack"
+Benchmark #1: php -dopcache.jit=1235 -dopcache.enable_cli=yes -dopcache.enable=yes src/main.php
+  Time (mean ± σ):      1.579 s ±  0.381 s    [User: 748.1 ms, System: 172.6 ms]
+  Range (min … max):    1.191 s …  3.499 s    100 runs
+
+Benchmark #2: hhvm -d hhvm.jit=1 src/main.hack
+  Time (mean ± σ):      3.476 s ±  0.852 s    [User: 1.694 s, System: 0.310 s]
+  Range (min … max):    2.151 s …  5.047 s    100 runs
 
 Summary
-  'php src/main.php' ran
-    1.17 ± 0.47 times faster than 'hhvm src/main.hack'
+  'php -dopcache.jit=1235 -dopcache.enable_cli=yes -dopcache.enable=yes src/main.php' ran
+    2.20 ± 0.76 times faster than 'hhvm -d hhvm.jit=1 src/main.hack'
 ```

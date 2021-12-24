@@ -10,9 +10,9 @@ use HH\Asio;
 async function main(): Awaitable<noreturn> {
     $start = microtime(true);
 
-    $client = new Async\Semaphore(3, async (string $url): Awaitable<string> ==> {
-        $client = await TCP\connect_async($url, 80, shape('ip_version' => Network\IPProtocolBehavior::FORCE_IPV4));
-        await $client->writeAllAsync("GET / HTTP/1.1\r\nHost: $url\r\nConnection: close\r\n\r\n");
+    $client = new Async\Semaphore(100, async (int $_i): Awaitable<string> ==> {
+        $client = await TCP\connect_async('localhost', 3030, shape('ip_version' => Network\IPProtocolBehavior::FORCE_IPV4));
+        await $client->writeAllAsync("GET / HTTP/1.1\r\nHost: localhost\r\nConnection: close\r\n\r\n");
         $response = await $client->readAllAsync();
         $client->close();
 
@@ -20,8 +20,8 @@ async function main(): Awaitable<noreturn> {
     });
 
     $awaitables = vec[];
-    for ($i = 0; $i <= 50; $i++) {
-        $awaitables[] = $client->waitForAsync('example.com');
+    for ($i = 0; $i <= 1000; $i++) {
+        $awaitables[] = $client->waitForAsync($i);
     }
 
     $responses = await Asio\v($awaitables);
