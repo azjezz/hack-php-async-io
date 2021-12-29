@@ -23,7 +23,7 @@ Async\main(static function (): int {
     $watcher = Async\Scheduler::onSignal(SIGINT, $server->close(...));
     Async\Scheduler::unreference($watcher);
 
-    $semaphore = new Async\Semaphore(100, static function ($connection) {
+    $semaphore = new Async\Semaphore(200, static function ($connection) {
         try {
             $request = $connection->read();
 
@@ -37,6 +37,8 @@ Async\main(static function (): int {
             $connection->writeAll("Content-Type: text/plain; charset=utf-8\n\n");
             $connection->writeAll("Hello, World!");
             $connection->close();
+
+            unset($request, $header_line, $connection); // free memory.
         } catch (Exception $e) {
             IO\write_error_line('[%s]: %s ( %s:%d )', $e::class, $e->getMessage(), $e->getFile(), $e->getLine());
         }
@@ -45,7 +47,8 @@ Async\main(static function (): int {
     try {
         while (true) {
             $connection = $server->nextConnection();
-            Async\run(static fn() => $semaphore->waitFor($connection))->ignore();
+
+            Async\Scheduler::defer(static fn() => $semaphore->waitFor($connection));
         }
     } catch (AlreadyStoppedException) {
         IO\write_error_line('');

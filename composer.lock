@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/azjezz/psl.git",
-                "reference": "61ebaa2df05aec9c9e92900931b1c2ec8eb834ef"
+                "reference": "94a0231c1bfc032d7aa17afabedb17da63a7153c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/azjezz/psl/zipball/61ebaa2df05aec9c9e92900931b1c2ec8eb834ef",
-                "reference": "61ebaa2df05aec9c9e92900931b1c2ec8eb834ef",
+                "url": "https://api.github.com/repos/azjezz/psl/zipball/94a0231c1bfc032d7aa17afabedb17da63a7153c",
+                "reference": "94a0231c1bfc032d7aa17afabedb17da63a7153c",
                 "shasum": ""
             },
             "require": {
@@ -79,7 +79,7 @@
                     "type": "open_collective"
                 }
             ],
-            "time": "2021-12-22T20:55:25+00:00"
+            "time": "2021-12-29T06:45:15+00:00"
         },
         {
             "name": "revolt/event-loop",
